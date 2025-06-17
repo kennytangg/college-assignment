@@ -1,3 +1,6 @@
 [submodule "human-and-computer-interaction/hci1"]
 	path = human-and-computer-interaction/hci1
 	url = https://github.com/kennytangg/HCI_LAB
+[submodule "human-and-computer-interaction/hci2"]
+	path = human-and-computer-interaction/hci2
+	url = https://github.com/kennytangg/HCI_LAB2.git
