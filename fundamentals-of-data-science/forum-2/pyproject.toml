@@ -7,5 +7,6 @@ requires-python = ">=3.12"
 dependencies = [
     "ipykernel>=7.1.0",
     "matplotlib>=3.10.7",
+    "nbconvert[webpdf]>=7.16.6",
     "scikit-learn>=1.7.2",
 ]
