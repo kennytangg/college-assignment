@@ -1,9 +1,12 @@
-# MST Algorithms - Optimized for Large Graphs
+# MST Algorithms
 # Prim's: O(E log V) with binary heap
-# Kruskal's: O(E log E) with Union-Find (rank + path compression)
+# Kruskal's: O(E log E) with Union-Find
 
 import heapq
 import time
+import statistics
+import math
+
 
 def parse_graph(filename):
     edges = []
@@ -21,11 +24,11 @@ def parse_graph(filename):
 
     max_vertex = max(max(u, v) for u, v, _ in edges)
     num_vertices = max_vertex + 1
+    start_vertex = edges[0][0]
 
     print(f"Done ({time.time() - start:.3f}s)")
-    print(f"Graph: {num_vertices} vertices, {len(edges)} edges\n")
 
-    return edges, num_vertices
+    return edges, num_vertices, start_vertex
 
 
 def build_adjacency(edges, n):
@@ -36,10 +39,22 @@ def build_adjacency(edges, n):
     return adj
 
 
-# Prim's algorithm with binary heap O(E log V)
-def prims_optimized(adj, n):
+def calculate_graph_properties(n, e):
+    max_edges = (n * (n - 1)) / 2
+    density = (e / max_edges) * 100 if max_edges > 0 else 0
+    avg_degree = (2 * e) / n if n > 0 else 0
+
+    return {
+        "density": density,
+        "avg_degree": avg_degree,
+        "is_sparse": density < 10,
+        "is_dense": density > 50,
+    }
+
+
+def prims_optimized(adj, n, start_vertex):
     in_mst = [False] * n
-    heap = [(0, 0)]
+    heap = [(0, start_vertex)]  # Use start_vertex instead of 0
     total = 0
     edges_count = 0
 
@@ -60,7 +75,6 @@ def prims_optimized(adj, n):
     return total
 
 
-# Kruskal's algorithm with Union-Find O(E log E)
 class UnionFind:
     def __init__(self, n):
         self.parent = list(range(n))
@@ -101,83 +115,133 @@ def kruskals_optimized(edges, n):
     return total
 
 
-# Benchmark = run 10 times
-def benchmark(func, *args, runs=10):
+def benchmark_detailed(func, *args, runs=10):
     times = []
     results = []
 
-    for i in range(runs):
+    print(f"\n{'Run':<6} {'Time (s)':<15} {'Distance':<15}")
+    print("-" * 40)
+
+    for i in range(1, runs + 1):
         start = time.time()
         result = func(*args)
         elapsed = time.time() - start
         times.append(elapsed)
         results.append(result)
 
+        print(f"{i:<6} {elapsed:<15.8f} {result:<15,}")
+
     return results, times
 
 
 def main():
-    filename = "data/standard.text"
-
-    print("=" * 60)
-    print("MST ALGORITHMS - BENCHMARK")
-    print("=" * 60)
-    print()
+    filename = "data/USA-road-d.COL.text"
+    graph_name = filename.split("/")[-1].replace(".text", "").replace(".txt", "")
 
     # Load graph once
-    edges, n = parse_graph(filename)
+    edges, n, start_vertex = parse_graph(filename)
+    e = len(edges)
     adj = build_adjacency(edges, n)
 
-    print("=" * 60)
-    print("Running each algorithm 10 times")
-    print("(Computation time only, excluding file loading)")
-    print("=" * 60)
+    print(f"Starting Prim's from vertex: {start_vertex}\n")
+
+    # Graph properties
+    props = calculate_graph_properties(n, e)
+
+    print("GRAPH PROPERTIES:")
+    print("-" * 70)
+    print(f"Graph Name:        {graph_name}")
+    print(f"Nodes (V):         {n:,}")
+    print(f"Arcs (E):          {e:,}")
+    print(f"Density:           {props['density']:.4f}%")
+    print(f"Avg Degree:        {props['avg_degree']:.2f}")
+    print(f"Sparse/Dense:      {'Sparse' if props['is_sparse'] else 'Dense'}")
     print()
 
-    # Prim's
-    print("PRIM'S ALGORITHM")
-    print("-" * 60)
-    prim_results, prim_times = benchmark(prims_optimized, adj, n, runs=10)
-
-    print(f"Total Distance: {prim_results[0]}")
-    print(f"Average compute time: {sum(prim_times) / len(prim_times):.6f}s")
-    print(f"Min compute time: {min(prim_times):.6f}s")
-    print(f"Max compute time: {max(prim_times):.6f}s")
+    # Theoretical complexity
+    print("THEORETICAL COMPLEXITY:")
+    print("-" * 70)
+    prim_complexity = e * math.log2(n) if n > 0 else 0
+    kruskal_complexity = e * math.log2(e) if e > 0 else 0
+    print(f"Prim's O(E log V):    {prim_complexity:.2e} operations")
+    print(f"Kruskal's O(E log E): {kruskal_complexity:.2e} operations")
     print()
 
-    # Kruskal's
-    print("KRUSKAL'S ALGORITHM")
-    print("-" * 60)
-    kruskal_results, kruskal_times = benchmark(kruskals_optimized, edges, n, runs=10)
+    # Prim's Algorithm
+    print("=" * 70)
+    print("PRIM'S ALGORITHM - 10 RUNS")
+    print("=" * 70)
+    prim_results, prim_times = benchmark_detailed(
+        prims_optimized, adj, n, start_vertex, runs=10
+    )
 
-    print(f"Total Distance: {kruskal_results[0]}")
-    print(f"Average compute time: {sum(kruskal_times) / len(kruskal_times):.6f}s")
-    print(f"Min compute time: {min(kruskal_times):.6f}s")
-    print(f"Max compute time: {max(kruskal_times):.6f}s")
-    print()
+    print("\nPRIM'S STATISTICS:")
+    print("-" * 70)
+    print(f"Total Distance:    {prim_results[0]:,}")
+    print(f"Average Time:      {statistics.mean(prim_times):.8f}s")
+    print(f"Median Time:       {statistics.median(prim_times):.8f}s")
+    print(f"Std Deviation:     {statistics.stdev(prim_times):.8f}s")
+    print(f"Variance:          {statistics.variance(prim_times):.10f}")
+    print(f"Min Time:          {min(prim_times):.8f}s")
+    print(f"Max Time:          {max(prim_times):.8f}s")
+
+    # Kruskal's Algorithm
+    print("\n" + "=" * 70)
+    print("KRUSKAL'S ALGORITHM - 10 RUNS")
+    print("=" * 70)
+    kruskal_results, kruskal_times = benchmark_detailed(
+        kruskals_optimized, edges, n, runs=10
+    )
+
+    print("\nKRUSKAL'S STATISTICS:")
+    print("-" * 70)
+    print(f"Total Distance:    {kruskal_results[0]:,}")
+    print(f"Average Time:      {statistics.mean(kruskal_times):.8f}s")
+    print(f"Median Time:       {statistics.median(kruskal_times):.8f}s")
+    print(f"Std Deviation:     {statistics.stdev(kruskal_times):.8f}s")
+    print(f"Variance:          {statistics.variance(kruskal_times):.10f}")
+    print(f"Min Time:          {min(kruskal_times):.8f}s")
+    print(f"Max Time:          {max(kruskal_times):.8f}s")
+
+    # Comparison data
+    avg_prim = statistics.mean(prim_times)
+    avg_kruskal = statistics.mean(kruskal_times)
+
+    print("\n" + "=" * 70)
+    print("COMPARISON DATA")
+    print("=" * 70)
+    print(f"Prim's avg time:       {avg_prim:.8f}s")
+    print(f"Kruskal's avg time:    {avg_kruskal:.8f}s")
+    print(f"Absolute difference:   {abs(avg_prim - avg_kruskal):.8f}s")
+    print(
+        f"Percentage difference: {abs(avg_prim - avg_kruskal) / min(avg_prim, avg_kruskal) * 100:.2f}%"
+    )
+    print(f"Faster algorithm:      {'Prim' if avg_prim < avg_kruskal else 'Kruskal'}")
+    print(
+        f"Speed ratio:           {max(avg_prim, avg_kruskal) / min(avg_prim, avg_kruskal):.2f}x"
+    )
 
     # Verification
-    print("=" * 60)
+    print("\n" + "=" * 70)
     print("VERIFICATION")
-    print("=" * 60)
-    print(f"Both algorithms agree: {prim_results[0] == kruskal_results[0]}")
-    print(f"Total distance: {prim_results[0]}")
-    print(f"All runs consistent: {len(set(prim_results)) == 1 and len(set(kruskal_results)) == 1}")
-    print()
+    print("=" * 70)
+    print(f"Algorithms agree:          {prim_results[0] == kruskal_results[0]}")
+    print(f"Prim runs consistent:      {len(set(prim_results)) == 1}")
+    print(f"Kruskal runs consistent:   {len(set(kruskal_results)) == 1}")
 
-    # Performance comparison
-    avg_prim = sum(prim_times) / len(prim_times)
-    avg_kruskal = sum(kruskal_times) / len(kruskal_times)
-
-    print("PERFORMANCE COMPARISON")
-    print("-" * 60)
-    print(f"Prim's avg:    {avg_prim:.6f}s")
-    print(f"Kruskal's avg: {avg_kruskal:.6f}s")
-
-    if avg_prim < avg_kruskal:
-        print(f"Prim's is {avg_kruskal / avg_prim:.2f}x faster")
-    else:
-        print(f"Kruskal's is {avg_prim / avg_kruskal:.2f}x faster")
+    # Table format
+    print("\n" + "=" * 70)
+    print("TABLE FORMAT")
+    print("=" * 70)
+    print(f"\nGraph: {graph_name} | Nodes: {n:,} | Arcs: {e:,}\n")
+    print(
+        f"{'Run':<5} | {'Prim Time (s)':>15} | {'Prim Dist':>12} | {'Kruskal Time (s)':>17} | {'Kruskal Dist':>13}"
+    )
+    print("-" * 85)
+    for i in range(10):
+        print(
+            f"{i + 1:<5} | {prim_times[i]:>15.8f} | {prim_results[i]:>12,} | {kruskal_times[i]:>17.8f} | {kruskal_results[i]:>13,}"
+        )
     print()
 
 
