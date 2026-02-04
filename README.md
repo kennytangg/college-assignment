@@ -6,3 +6,6 @@ This repository contains all the files for my college courses that require codin
 - Human and Computer Interaction ( Semester 1 )
 - Data Structures ( Semester 2 )
 - Fundamentals of Data Science ( Semester 3 )
+- Algorithm Design and Analysis ( Semester 3 )
+- Database Technology ( Semester 3 )
+- Computational Physics ( Semester 4 )
