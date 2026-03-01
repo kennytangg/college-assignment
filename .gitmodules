@@ -1,6 +1,6 @@
 [submodule "human-and-computer-interaction/hci1"]
 	path = human-and-computer-interaction/hci1
-	url = https://github.com/kennytangg/HCI_LAB
+	url = https://github.com/kennytangg/HCI_LAB.git
 [submodule "human-and-computer-interaction/hci2"]
 	path = human-and-computer-interaction/hci2
 	url = https://github.com/kennytangg/HCI_LAB2.git
@@ -12,4 +12,4 @@
 	url = https://github.com/kennytangg/kenny-2802517733-L4AC-WADS_Week1.git
 [submodule "web-application-development-and-security/lab-week3"]
 	path = web-application-development-and-security/lab-week3
-	url = https://github.com/kennytangg/wads-week3
+	url = https://github.com/kennytangg/wads-app.git
