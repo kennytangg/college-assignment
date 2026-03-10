@@ -4,11 +4,18 @@ def f(x):
     return (np.sin(np.sqrt(100 * x)))**2
 
 # --- (a) Adaptive Trapezoidal Rule ---
+print("=" * 60)
+print("Exercise 5.7(a): Adaptive Trapezoidal Rule")
+print("=" * 60)
+print(f"{'N':>6} {'Integral':>15} {'Error Estimate':>15}")
+print("-" * 60)
+
 a, b = 0, 1
 eps = 1e-6
 n = 1
 h = b - a
 I_old = 0.5 * h * (f(a) + f(b))
+print(f"{n:6d} {I_old:15.10f} {'---':>15}")
 error = 1.0
 
 while error > eps:
@@ -19,13 +26,25 @@ while error > eps:
     I_new = 0.5 * I_old + h * s
     
     error = abs(I_new - I_old) / 3.0
+    print(f"{n:6d} {I_new:15.10f} {error:15.10f}")
     I_old = I_new
 
-print(f"Trapezoidal Result: {I_new:.6f} using {n} slices")
+print("=" * 60)
+print(f"Final Result: I = {I_new:.10f}\n")
 
 # --- (b) Romberg Integration ---
-# We use a 1D list 'R' to store only the current row of the Romberg table
+print("=" * 60)
+print("Exercise 5.7(b): Romberg Integration")
+print("=" * 60)
+print("Triangular table of Romberg estimates:")
+print()
+
+# Store the full table for display
+romberg_table = []
 R = [0.5 * (b - a) * (f(a) + f(b))]
+romberg_table.append(R[:])
+print(f"N=1:  {R[0]:15.10f}")
+
 n = 1
 h = b - a
 error = 1.0
@@ -46,5 +65,12 @@ while error > eps:
     
     error = abs(new_row[-1] - R[-1])
     R = new_row
+    romberg_table.append(R[:])
+    
+    # Print the row
+    row_str = f"N={n:<3}: "
+    row_str += "  ".join(f"{val:15.10f}" for val in R)
+    print(row_str)
 
-print(f"Romberg Result:     {R[-1]:.6f} using {n} slices")
+print("=" * 60)
+print(f"Final Result: I = {R[-1]:.10f}\n")

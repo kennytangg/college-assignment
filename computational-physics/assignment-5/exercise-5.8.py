@@ -21,6 +21,13 @@ S_old = (4 * T_new - T_old) / 3
 
 error = 1.0
 
+print("=" * 60)
+print("Exercise 5.8: Adaptive Simpson's Rule")
+print("=" * 60)
+print(f"{'N':>6} {'Simpson Estimate':>20} {'Error Estimate':>15}")
+print("-" * 60)
+print(f"{n:6d} {S_old:20.10f} {'---':>15}")
+
 # Adaptive Loop
 while error > eps:
     T_old = T_new
@@ -36,7 +43,8 @@ while error > eps:
     
     # Error estimate using Richardson extrapolation for Simpson's
     error = abs(S_new - S_old) / 15.0
+    print(f"{n:6d} {S_new:20.10f} {error:15.10f}")
     S_old = S_new
 
-print(f"Simpson's Result: {S_new:.8f}")
-print(f"Number of Slices: {n}")
+print("=" * 60)
+print(f"Final Result: I = {S_new:.10f}\n")
