@@ -12,3 +12,4 @@ This repository contains all the files for my college courses that require codin
 - Database Technology ( Semester 3 )
 - Computational Physics ( Semester 4 )
 - Web Application Development and Security ( Semester 4 )
+- Operating System ( Semester 4 )
