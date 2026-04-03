@@ -1,0 +1,11 @@
+# compiled binary
+own_sem
+std_sem
+
+# generated output 
+output_own.txt
+output_std.txt
+
+# debug / output
+*.o
+*.dSYM/
