@@ -16,3 +16,6 @@
 [submodule "web-application-development-and-security/lec-week5"]
 	path = web-application-development-and-security/lec-week5
 	url = https://github.com/kennytangg/assignment-log-book-app
+[submodule "web-application-development-and-security/lab-week8"]
+	path = web-application-development-and-security/lab-week8
+	url = https://github.com/kennytangg/todo-list-app-2
