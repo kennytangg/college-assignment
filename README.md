@@ -4,12 +4,23 @@ This repository contains all the files for my college courses that require codin
 > Note: not all assignments or coding files are in this repo.
 
 ### Courses
-- Algorithm and Programming ( Semester 1 )
-- Human and Computer Interaction ( Semester 1 )
-- Data Structures ( Semester 2 )
-- Fundamentals of Data Science ( Semester 3 )
-- Algorithm Design and Analysis ( Semester 3 )
-- Database Technology ( Semester 3 )
-- Computational Physics ( Semester 4 )
-- Web Application Development and Security ( Semester 4 )
-- Operating System ( Semester 4 )
+#### Semester 1
+- Algorithm and Programming
+- Human and Computer Interaction
+
+#### Semester 2
+- Data Structures
+
+#### Semester 3
+- Fundamentals of Data Science
+- Algorithm Design and Analysis
+- Database Technology
+
+#### Semester 4
+
+- Computational Physics
+- Web Application Development and Security
+- Operating System
+
+#### Semester 5
+- Computational Biology
